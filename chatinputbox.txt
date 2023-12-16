@@ -1,0 +1,97 @@
+import streamlit as st
+import joblib
+
+# Load the pre-trained machine learning model
+# model_path = "C:\Users\USER\randomforest.pkl"
+model_path = "C:\\Users\\USER\\randomforest.pkl"
+
+model = joblib.load(model_path)
+
+# Title
+st.title("Horse Medical Information")
+
+# Input fields
+horse_id = st.number_input("1. Horse ID", min_value=1)
+surgery_option = st.radio("2. Surgery History", ['Yes', 'No'])
+age_option = st.radio("3. Age", ['Adult', 'Young (< 6 months)'])
+hospital_number = st.text_input("4. Hospital Number", type='default')
+rectal_temperature = st.number_input("5. Rectal Temperature", min_value=35.0, max_value=42.0, value=37.8)
+respiratory_rate = st.slider("6. Respiratory Rate", min_value=0, max_value=30, value=8)
+temperature_extremities = st.selectbox("7. Temperature of Extremities", ['Cool', 'Normal', 'Warm'])
+peripheral_pulse = st.selectbox("8. Peripheral Pulse", ['Absent', 'Reduced', 'Normal', 'Increased'])
+mucous_membranes = st.selectbox("9. Mucous Membranes Color", ['Normal Pink', 'Bright Pink', 'Pale Pink', 'Pale Cyanotic', 'Bright Red/Injected', 'Dark Cyanotic'])
+capillary_refill_time = st.selectbox("10. Capillary Refill Time", ['< 3 seconds', '>= 3 seconds'])
+pain_level = st.selectbox("11. Pain Level", ['Alert, No Pain', 'Depressed', 'Intermittent Mild Pain', 'Intermittent Severe Pain', 'Continuous Severe Pain'])
+peristalsis = st.selectbox("12. Peristalsis", ['Hypermotile', 'Normal', 'Hypomotile', 'Absent'])
+abdominal_distension = st.selectbox("13. Abdominal Distension", ['None', 'Slight', 'Moderate', 'Severe'])
+nasogastric_tube = st.selectbox("14. Nasogastric Tube", ['None', 'Slight', 'Significant'])
+nasogastric_reflux = st.selectbox("15. Nasogastric Reflux", ['None', '> 1 liter', '< 1 liter'])
+nasogastric_reflux_ph = st.number_input("16. Nasogastric Reflux PH", min_value=0.0, max_value=14.0, value=3.5)
+rectal_exam_feces = st.selectbox("17. Rectal Examination - Feces", ['Normal', 'Increased', 'Decreased', 'Absent'])
+abdomen_condition = st.selectbox("18. Abdomen Condition", ['Normal', 'Other', 'อุจจาระแข็งในลำไส้ใหญ่', 'ลำไส้เล็กขยาย', 'ลำไส้ใหญ่บวม'])
+packed_cell_volume = st.number_input("19. Packed Cell Volume", min_value=0.0, value=35.0)
+total_protein = st.number_input("20. Total Protein", min_value=0.0, value=7.0)
+abdominocentesis_appearance = st.selectbox("21. Abdominocentesis Appearance", ['Clear', 'Cloudy', 'Serosanguinous'])
+abdomcentesis_total_protein = st.slider("22. Abdominocentesis Total Protein", min_value=0.0, max_value=10.0, value=5.0)
+surgical_lesion = st.selectbox("24. Surgical Lesion", ['Yes', 'No'])
+
+if surgical_lesion == 'Yes':
+    st.write("25. Lesion Location:")
+    first_number = st.text_input("   First Number (Position)", key="lesion_position")
+    second_number = st.text_input("   Second Number (Main Type)", key="lesion_main_type")
+    third_number = st.text_input("   Third Number (Subtype)", key="lesion_subtype")
+    fourth_number = st.text_input("   Fourth Number (Specific Code)", key="lesion_specific_code")
+    lesion_location = f"{first_number}{second_number}{third_number}{fourth_number}"
+else:
+    lesion_location = 'Do not have Surgical Lesion'
+
+# Display the input values in the sidebar
+st.sidebar.title("Display the Input Values:")
+st.sidebar.markdown(f"**1. Horse ID:** {horse_id}")
+st.sidebar.markdown(f"**2. Surgery History:** {surgery_option}")
+st.sidebar.markdown(f"**3. Age:** {age_option}")
+st.sidebar.markdown(f"**4. Hospital Number:** {hospital_number}")
+st.sidebar.markdown(f"**5. Rectal Temperature:** {rectal_temperature}°C")
+st.sidebar.markdown(f"**6. Respiratory Rate:** {respiratory_rate} breaths per minute")
+st.sidebar.markdown(f"**7. Temperature of Extremities:** {temperature_extremities}")
+st.sidebar.markdown(f"**8. Peripheral Pulse:** {peripheral_pulse}")
+st.sidebar.markdown(f"**9. Mucous Membranes Color:** {mucous_membranes}")
+st.sidebar.markdown(f"**10. Capillary Refill Time:** {capillary_refill_time}")
+st.sidebar.markdown(f"**11. Pain Level:** {pain_level}")
+st.sidebar.markdown(f"**12. Peristalsis:** {peristalsis}")
+st.sidebar.markdown(f"**13. Abdominal Distension:** {abdominal_distension}")
+st.sidebar.markdown(f"**14. Nasogastric Tube:** {nasogastric_tube}")
+st.sidebar.markdown(f"**15. Nasogastric Reflux:** {nasogastric_reflux}")
+st.sidebar.markdown(f"**16. Nasogastric Reflux PH:** {nasogastric_reflux_ph}")
+st.sidebar.markdown(f"**17. Rectal Exam - Feces:** {rectal_exam_feces}")
+st.sidebar.markdown(f"**18. Abdomen Condition:** {abdomen_condition}")
+st.sidebar.markdown(f"**19. Packed Cell Volume:** {packed_cell_volume}")
+st.sidebar.markdown(f"**20. Total Protein:** {total_protein}")
+st.sidebar.markdown(f"**21. Abdominocentesis Appearance:** {abdominocentesis_appearance}")
+st.sidebar.markdown(f"**22. Abdominocentesis Total Protein:** {abdomcentesis_total_protein}")
+st.sidebar.markdown(f"**24. Surgical Lesion:** {surgical_lesion}")
+st.sidebar.markdown(f"**25. Lesion Location:** {lesion_location}")
+
+# Prediction button
+if st.button("Predict Outcome"):
+    # Gather input values
+    input_values = {
+        "horse_id": horse_id,
+        "surgery_option": surgery_option,
+        "age_option": age_option,
+        # Include other input values here...
+    }
+
+    # Perform prediction using the loaded model
+    prediction = model.predict([list(input_values.values())])[0]
+
+    # Display the predicted outcome
+    st.write("### Predicted Outcome:")
+    if prediction == 1:
+        st.success("Lived")
+    elif prediction == 2:
+        st.error("Died")
+    elif prediction == 3:
+        st.warning("Was Euthanized")
+    else:
+        st.write("Unable to make a prediction")
