@@ -1,9 +1,9 @@
 import streamlit as st
 import pickle
 import pandas as pd
-import matplotlib
-import matplotlib.pyplot as plt
-#import plotly.express as px
+from matplotlib import pyplot as plt
+# import matplotlib.pyplot as plt
+# import plotly.express as px
 
 model_path = "C:\\Users\\USER\\mlweb\\randomforest.pkl"
 with open(model_path, 'rb') as file:
