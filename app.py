@@ -1,9 +1,7 @@
 import streamlit as st
 import pickle
 import pandas as pd
-from matplotlib import pyplot as plt
-# import matplotlib.pyplot as plt
-# import plotly.express as px
+
 
 model_path = "C:\\Users\\USER\\mlweb\\randomforest.pkl"
 with open(model_path, 'rb') as file:
@@ -225,15 +223,19 @@ def main():
     st.sidebar.table(probabilities_df)
 
     st.sidebar.subheader('Prediction Probability Chart')
+    chart_data = pd.DataFrame({'labels': labels, 'probabilities': prediction_probabilities[0]})
+    st.sidebar.bar_chart(chart_data.set_index('labels'), width=470, height=400)
+
+
     # fig = px.bar(x=labels, y=prediction_probabilities[0], color=labels, labels={'x': 'Outcome', 'y': 'Probability'},color_discrete_map={'died': 'red', 'euthanized': 'blue', 'lived': 'green'})
     # fig.update_layout(width=470)
     # st.sidebar.plotly_chart(fig)
     
-    prediction_labels = [labels[pred] for pred in prediction]
-    fig, ax = plt.subplots()
-    ax.bar(labels, prediction_probabilities[0], color='orange')
-    plt.xticks(rotation=45)  # Rotate the x-axis labels for better visibility
-    st.sidebar.pyplot(fig)
+    # prediction_labels = [labels[pred] for pred in prediction]
+    # fig, ax = plt.subplots()
+    # ax.bar(labels, prediction_probabilities[0], color='orange')
+    # plt.xticks(rotation=45)  # Rotate the x-axis labels for better visibility
+    # st.sidebar.pyplot(fig)
 
 if __name__ == "__main__":
     main()
