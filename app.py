@@ -1,11 +1,11 @@
 import streamlit as st
 import pickle
 import pandas as pd
-import joblib
 import matplotlib.pyplot as plt
 
 model_path = "C:\\Users\\USER\\mlweb\\randomforest.pkl"
-classifier = joblib.load(model_path)
+with open(model_path, 'rb') as file:
+    classifier = pickle.load(file)
 # Set Streamlit theme with a brown color
 st.set_page_config(
     page_title="Horse Health Prediction",
